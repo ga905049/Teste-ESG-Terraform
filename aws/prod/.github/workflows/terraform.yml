@@ -1,0 +1,45 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -recursive -check
+
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        workspaces:
+          - aws/prod
+    defaults:
+      run:
+        working-directory: ${{ matrix.workspaces }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform Init (no backend)
+        id: init
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        env:
+          AWS_DEFAULT_REGION: us-east-1
