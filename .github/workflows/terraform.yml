@@ -1,45 +1,50 @@
-name: Terraform
+name: 'Terraform'
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  format:
-    name: Format
+  terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -recursive -check
-
-  validate:
-    name: Validate
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    strategy:
-      matrix:
-        workspaces:
-          - aws/prod
+    environment: production
     defaults:
       run:
-        working-directory: ${{ matrix.workspaces }}
+        shell: bash
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        mask-aws-account-id: "no"
 
-      - name: Terraform Init (no backend)
-        id: init
-        run: terraform init -backend=false
+    - name: Checkout
+      uses: actions/checkout@v3
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-        env:
-          AWS_DEFAULT_REGION: us-east-1
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.4.6
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Format
+      run: terraform fmt -recursive -check
+
+    - name: Terraform Plan
+      run: terraform plan -input=false
+
+      # On push to "main", deploy the Terraform infrastructure
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
