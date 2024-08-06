@@ -26,8 +26,8 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
         mask-aws-account-id: "no"
-        env:
-          AWS_REGION: us-east-1
+      env:
+        AWS_REGION: us-east-1
 
     - name: Checkout
       uses: actions/checkout@v3
