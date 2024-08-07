@@ -50,6 +50,15 @@ Deve ser criado um bucket S3 com **Block all public access** **habilitado**, **v
     ]
 }
 ```
+Criar tabela no DynamoDB com os seguintes parâmetros:
+
+- Partition key: LockID (String)
+- Capacity mode: Provisioned
+- Read capacity auto scaling: Off
+- Write capacity auto scaling: Off
+- Provisioned read capacity units: 1
+- Provisioned write capacity units: 1
+- Key management: Managed by DynamoDB
 
 ## Recursos
 
