@@ -1,9 +1,20 @@
 ## Estrutura
 
-A estrutura é definida pelo diretório principal que faz referência ao cloud provider (Ex.: aws e gcp) e subdiretórios definindo qual ambiente em questão (Ex.: prod, dev e staging).
+A estrutura é definida por diretórios que fazem referência ao cloud provider (Ex.: aws e gcp) e subdiretórios definindo qual ambiente em questão (Ex.: prod, dev e staging).
 
 ``` text
-
+.
+├── aws
+│   └── prod
+│       ├── instance.tf
+│       ├── key_pair.tf
+│       ├── load_balancer.tf
+│       ├── locals.tf
+│       ├── main.tf
+│       ├── output.tf
+│       ├── provider.tf
+│       ├── security_group.tf
+│       └── vpc.tf
 ```    
 
 ## Requisitos
@@ -135,9 +146,9 @@ terraform destroy -target=[recurso]
 
 ## CI/CD
 
-O arquivo principal que configura a pipeline é o **terraform.yml** que está em .github/workflows. Para executar a pipeline basta fazer um push para a branch main.
+O arquivo principal que configura a pipeline é o **terraform.yml** que está em **.github/workflows**. Para executar a pipeline basta fazer um push para a branch main.
 
-Ppara que seja criado um job segregado para cada ambiente, foi configurado workspaces (Ex.: aws/prod). 
+Para que seja criado um job segregado para cada ambiente, foi configurado workspaces (Ex.: aws/prod). 
 
 A pipeline possui os seguintes steps:
 
