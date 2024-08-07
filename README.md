@@ -94,6 +94,44 @@ Output:
 
 ## Comandos
 
+Caso opte pela execução do terraform localmente você pode utilizar os seguintes comandos:
+
+Acesse o diretório onde esta o backend do ambiente que queremos alterar:
+
+``` text
+cd aws/prod
+```
+Inicie o código terraform e formate-o corretamente:
+
+``` text
+terraform init
+terraform fmt -recursive
+```
+
+Para aplicar alterações/criações:
+
+``` text
+terraform plan
+terraform apply
+```
+
+Para aplicar alterações/criações específicas:
+
+``` text
+terraform plan
+terraform apply -target=[recurso]
+```
+Para destruir todos os recursos:
+
+``` text
+terraform destroy
+```
+
+Para destruir um recurso específico:
+
+``` text
+terraform destroy -target=[recurso]
+```
 
 
 
