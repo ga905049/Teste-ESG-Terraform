@@ -44,22 +44,22 @@ resource "aws_instance" "docker-server" {
   subnet_id              = element(module.vpc_producao.private_subnets, 0)
   vpc_security_group_ids = [aws_security_group.docker-server-sg.id]
   user_data              = <<EOF
-  #!/bin/bash
-  # Install docker
-  apt-get update
-  apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) \
-    stable"
-  apt-get update
-  apt-get install -y docker-ce
-  usermod -aG docker ubuntu
+#!/bin/bash
+# Install docker
+apt-get update
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) \
+  stable"
+apt-get update
+apt-get install -y docker-ce
+usermod -aG docker ubuntu
 
-  systemctl enable docker
-  systemctl start docker
-  EOF
+systemctl enable docker
+systemctl start docker
+EOF
 
   tags = {
     Name = "Docker Server"
