@@ -67,7 +67,7 @@ Network:
 
 Load Balancer:
 
-- app-lb: Load balancer público criado para expor a aplicação.
+- app-lb: Load balancer público do tipo Application criado para expor a aplicação.
 - app-tg: Target group vinculado á instância docker-server e ao load balancer app-lb.
 - app-tg-attach: Vinculo da instância docker-server com o target grpup app-tg.
 - app-listener: Listener na porta 80 criado para expor a aplicação através do load balancer.
@@ -133,5 +133,17 @@ Para destruir um recurso específico:
 terraform destroy -target=[recurso]
 ```
 
+## CI/CD
 
+O arquivo principal que configura a pipeline é o **terraform.yml** que está em .github/workflows. Para executar a pipeline basta fazer um push para a branch main.
 
+Ppara que seja criado um job segregado para cada ambiente, foi configurado workspaces (Ex.: aws/prod). 
+
+A pipeline possui os seguintes steps:
+
+- Configure aws credentials: Configura as credencias da AWS que devem ser criadas como secrets no github com o nome de AWS_ACCESS_KEY_ID e AWS_SECRET_ACCESS_KEY.
+Setup Terraform.
+- Terraform Init: Inicializa o código terraform.
+- Terraform Format: Checa se a formatação esta correta.
+- Terraform Plan: Realiza o plan e exibe no console do github.
+- Terraform Apply: Aplica as alterações.
